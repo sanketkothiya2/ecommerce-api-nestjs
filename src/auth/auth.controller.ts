@@ -1,4 +1,4 @@
-import { Controller, Request, Get, Post, Body, UseGuards } from '@nestjs/common';
+import { Controller, Request, Get, Post, Body, UseGuards, HttpException, InternalServerErrorException } from '@nestjs/common';
 import { CreateUserDTO } from '../dtos/create-user-dto';
 import { UserService } from 'src/user/user.service';
 import { AuthService } from './auth.service';
@@ -10,7 +10,7 @@ import { RolesGuard } from './guards/roles.guard';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService, private userService: UserService) {}
+  constructor(private authService: AuthService, private userService: UserService) { }
 
   @Post('/register')
   async register(@Body() createUserDTO: CreateUserDTO) {
@@ -19,14 +19,15 @@ export class AuthController {
   }
   @UseGuards(LocalAuthGuard)
   @Post('/login')
-  async login(@Request() req) {
+  async login(@Request() req: any) {
     return this.authService.login(req.user);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.User)
+  // @UseGuards(JwtAuthGuard)
   @Get('/user')
-  getProfile(@Request() req) {
+  getProfile(@Request() req: any) {
     return req.user;
   }
 
@@ -34,6 +35,15 @@ export class AuthController {
   @Roles(Role.Admin)
   @Get('/admin')
   getDashboard(@Request() req) {
-    return req.user;
+    try {
+      return req.user
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('You are not admin ');
+    }
+
   }
+
 }
