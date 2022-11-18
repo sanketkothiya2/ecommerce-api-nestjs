@@ -8,10 +8,10 @@ import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import * as dotenv from "dotenv";
 
-dotenv.config({ path: `${__dirname}/../../config.env` });
+// dotenv.config({ path: `${__dirname}/../../config.env` });
 
 
-console.log(process.env.JWT_SECRET);
+// console.log(process.env.JWT_SECRET);
 
 @Module({
   imports: [

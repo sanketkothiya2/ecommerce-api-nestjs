@@ -15,10 +15,10 @@ export class User {
   @Prop()
   password: string;
 
-/*
-  @Prop()
-  roles: Role[];
-*/
+
+  @Prop({ defaults: 'user' })
+  roles: string;
+
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
