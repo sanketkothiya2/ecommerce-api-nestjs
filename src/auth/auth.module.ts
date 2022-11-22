@@ -22,7 +22,7 @@ import * as dotenv from "dotenv";
       secret: 'topsecret',
 
       signOptions: { expiresIn: '3600s' },
-    }),
+    })
   ],
   providers: [
     AuthService,

@@ -1,4 +1,4 @@
-import { Controller, Request, Get, Post, Body, UseGuards, HttpException, InternalServerErrorException } from '@nestjs/common';
+import { Controller, Request, Req, Get, Post, Body, UseGuards, Res, HttpException, InternalServerErrorException } from '@nestjs/common';
 import { CreateUserDTO } from '../dtos/create-user-dto';
 import { UserService } from 'src/user/user.service';
 import { AuthService } from './auth.service';
@@ -7,6 +7,7 @@ import { JwtAuthGuard } from './guards/jwt.guard';
 import { Roles } from './decorators/roles.decorator';
 import { Role } from '../enums/role.enum';
 import { RolesGuard } from './guards/roles.guard';
+import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -17,10 +18,25 @@ export class AuthController {
     const user = await this.userService.addUser(createUserDTO);
     return user;
   }
+  // @UseGuards(LocalAuthGuard)
+  // @Post('/login')
+  // async login(@Request() req: any) {
+  //   return this.authService.login(req.user);
+  // }
+
   @UseGuards(LocalAuthGuard)
   @Post('/login')
-  async login(@Request() req: any) {
-    return this.authService.login(req.user);
+  async login(@Req() req, @Res({ passthrough: true }) res: Response) {
+    const token = await this.authService.login(req.user);
+    res.cookie('jwt', token, {
+      expires: new Date(new Date().getTime() + 30 * 1000),
+      sameSite: 'strict',
+      httpOnly: true,
+
+    });
+    return {
+      token: token,
+    }
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
