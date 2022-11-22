@@ -42,6 +42,8 @@ export class CartService {
 
     if (cart) {
       const itemIndex = cart.items.findIndex((item) => item.productId == productId);
+      console.log("🚀 ~ file: cart.service.ts ~ line 45 ~ CartService ~ addItemToCart ~ itemIndex", itemIndex)
+
 
       if (itemIndex > -1) {
         let item = cart.items[itemIndex];
@@ -58,6 +60,7 @@ export class CartService {
       }
     } else {
       const newCart = await this.createCart(userId, itemDTO, subTotalPrice, price);
+      console.log("🚀 ~ file: cart.service.ts ~ line 63 ~ CartService ~ addItemToCart ~ newCart", newCart)
       return newCart;
     }
   }
