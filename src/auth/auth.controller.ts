@@ -28,14 +28,26 @@ export class AuthController {
   @Post('/login')
   async login(@Req() req, @Res({ passthrough: true }) res: Response) {
     const token = await this.authService.login(req.user);
-    res.cookie('jwt', token, {
+
+    const refreshToken = await this.userService.getRefreshToken(
+      req.user._Id,
+    );
+    
+    const secretData = {
+      token,
+      refreshToken,
+    };
+    res.cookie('jwt', secretData, {
       expires: new Date(new Date().getTime() + 30 * 1000),
       sameSite: 'strict',
       httpOnly: true,
 
     });
+    // return {
+    //   token: token,
+    // }
     return {
-      token: token,
+      secretData
     }
   }
 

@@ -6,6 +6,8 @@ export type UserDocument = User & Document;
 
 @Schema()
 export class User {
+
+  
   @Prop()
   username: string;
 
@@ -18,6 +20,12 @@ export class User {
 
   @Prop({ defaults: 'user' })
   roles: string;
+
+  @Prop({ nullable: true,name:'refreshtoken' })
+  refreshToken: string;
+
+  @Prop({ type: 'date', nullable: true, name:'refreshtokenexp' })
+  refreshTokenExp: string;
 
 }
 

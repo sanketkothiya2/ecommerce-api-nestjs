@@ -7,6 +7,7 @@ import { FilterProductDTO } from '../dtos/filter-product.dto';
 @Controller('store/products')
 export class ProductController {
   constructor(private productService: ProductService) { }
+
   @UseGuards(JwtAuthGuard)
   @Get('/')
   async getProducts(@Query() filterProductDTO: FilterProductDTO) {
@@ -18,6 +19,7 @@ export class ProductController {
       return allProducts;
     }
   }
+
   @UseGuards(JwtAuthGuard)
   @Get('/:id')
   async getProduct(@Param('id') id: string) {
@@ -45,4 +47,5 @@ export class ProductController {
     if (!product) throw new NotFoundException('Product does not exist');
     return product;
   }
+
 }

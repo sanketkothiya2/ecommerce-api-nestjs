@@ -4,6 +4,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from '../schemas/user.schema';
 import { CreateUserDTO } from '../dtos/create-user-dto';
 import * as bcrypt from 'bcrypt';
+import * as randomToken from 'rand-token';
+import * as moment from 'moment';
+
 
 @Injectable()
 export class UserService {
@@ -28,4 +31,28 @@ export class UserService {
     // console.log("🚀 ~ file: user.service.ts ~ line 28 ~ UserService ~ findUser ~ user", user)
     return user;
   }
+
+  public async getRefreshToken(userId: number): Promise<string> {
+    const userDataToUpdate = {
+      refreshToken: randomToken.generate(16),
+      refreshTokenExp: moment().day(1).format('YYYY/MM/DD'),
+    };
+   const data= await this.userModel.findByIdAndUpdate(userId, userDataToUpdate);
+    console.log("🚀 ~ file: user.service.ts ~ line 41 ~ UserService ~ getRefreshToken ~ data", data)
+    return userDataToUpdate.refreshToken;
 }
+
+public async validRefreshToken(
+  email: string,
+  refreshToken: string,
+) {
+  const currentDate = moment().day(1).format('YYYY/MM/DD');
+  let user = await this.userModel.findOne({ email: email,refreshToken: refreshToken,refreshTokenExp: {$gt:currentDate}},
+  ).select({username:1,email:1});
+
+  if(user){
+    return user
+  }else{
+    return {message:'somethings went wrong'}
+  }
+}}
