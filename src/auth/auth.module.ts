@@ -22,7 +22,7 @@ import * as dotenv from "dotenv";
       // secret: process.env.JWT_SECRET,
       secret: 'topsecret',
 
-      signOptions: { expiresIn: '3600s' },
+      signOptions: { expiresIn: '30s' },
     })
   ],
   providers: [

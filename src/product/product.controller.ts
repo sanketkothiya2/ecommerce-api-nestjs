@@ -1,5 +1,5 @@
 import { JwtAuthGuard } from './../auth/guards/jwt.guard';
-import { Controller, Post, Get, Put, Delete, Body, Param, Query, NotFoundException, UseGuards } from '@nestjs/common';
+import { Controller, Post, Get, Put, Delete, Body, Param, Query, NotFoundException, UseGuards, Req } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDTO } from '../dtos/product.dto';
 import { FilterProductDTO } from '../dtos/filter-product.dto';
@@ -46,6 +46,12 @@ export class ProductController {
     const product = await this.productService.deleteProduct(id);
     if (!product) throw new NotFoundException('Product does not exist');
     return product;
+  }
+
+  @Get('fav-movies')
+  @UseGuards(JwtAuthGuard)
+  async movies(@Req() req) {
+    return ['Avatar', 'Avengers'];
   }
 
 }

@@ -21,10 +21,10 @@ export class User {
   @Prop({ defaults: 'user' })
   roles: string;
 
-  @Prop({ nullable: true,name:'refreshtoken' })
+  @Prop()
   refreshToken: string;
 
-  @Prop({ type: 'date', nullable: true, name:'refreshtokenexp' })
+  @Prop({ type: 'date'})
   refreshTokenExp: string;
 
 }

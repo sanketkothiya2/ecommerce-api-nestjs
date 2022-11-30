@@ -37,22 +37,23 @@ export class UserService {
       refreshToken: randomToken.generate(16),
       refreshTokenExp: moment().day(1).format('YYYY/MM/DD'),
     };
-   const data= await this.userModel.findByIdAndUpdate(userId, userDataToUpdate);
+    const data = await this.userModel.findOneAndUpdate({ _id: userId, userDataToUpdate });
     console.log("🚀 ~ file: user.service.ts ~ line 41 ~ UserService ~ getRefreshToken ~ data", data)
     return userDataToUpdate.refreshToken;
-}
-
-public async validRefreshToken(
-  email: string,
-  refreshToken: string,
-) {
-  const currentDate = moment().day(1).format('YYYY/MM/DD');
-  let user = await this.userModel.findOne({ email: email,refreshToken: refreshToken,refreshTokenExp: {$gt:currentDate}},
-  ).select({username:1,email:1});
-
-  if(user){
-    return user
-  }else{
-    return {message:'somethings went wrong'}
   }
-}}
+
+  public async validRefreshToken(
+    email: string,
+    refreshToken: string,
+  ) {
+    const currentDate = moment().day(1).format('YYYY/MM/DD');
+    let user = await this.userModel.findOne({ email: email, refreshToken: refreshToken, refreshTokenExp: { $gt: currentDate } },
+    ).select({ username: 1, email: 1 });
+
+    if (user) {
+      return user
+    } else {
+      return { message: 'somethings went wrong' }
+    }
+  }
+}
