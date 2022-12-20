@@ -34,7 +34,7 @@ export class AuthService {
       return access_token;
 
     } catch (error) {
-      throw new Error("somthin wrong while loging")
+      throw new Error("somthing wrong while loging")
     }
   }
 }
